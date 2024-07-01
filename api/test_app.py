@@ -5,7 +5,7 @@ import base64
 import json
 from PIL import Image
 import numpy as np
-from app import app 
+from app import app
 
 # Créer une fixture pour le client de test Flask
 @pytest.fixture
