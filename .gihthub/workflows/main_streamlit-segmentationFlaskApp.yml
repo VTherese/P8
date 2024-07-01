@@ -19,32 +19,15 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Download model
-      env:
-        AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
-        AZURE_STORAGE_CONTAINER_NAME: ${{ secrets.AZURE_STORAGE_CONTAINER_NAME }}
-      run: |
-        python load_model.py
-
-    - name: Run unit tests
-      run: |
-        cd api
-        pytest
-
     - name: Zip artifact for deployment
       run: |
-        cd api
-        zip -r api.zip . -x 'test_app.py' -x '__pycache__/*' -x '.pytest_cache/*'
+        cd streamlit
+        zip -r streamlit.zip .
 
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: segmentationFlaskApp
         slot-name: production
-        package: api/api.zip
+        package: streamlit/streamlit.zip
         publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
