@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
 
 # URL de l'API Flask
-FLASK_API_URL = "http://127.0.0.1:8000/segment"
+FLASK_API_URL = "http://app-segmentation.azurewebsites.net/segment"
 
 st.set_page_config(page_title="Segmentation d'Images", page_icon="🚗")
 
