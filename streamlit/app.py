@@ -69,7 +69,7 @@ def draw_horizontal_legend():
     legend = Image.new("RGB", (legend_width, legend_height), legend_background_color)
     draw = ImageDraw.Draw(legend)
     
-    font = ImageFont.truetype("arial.ttf", font_size)
+    font = ImageFont.load_default()
 
     for i, (label, color) in enumerate(palette.items()):
         row = i // num_columns
