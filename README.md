@@ -21,8 +21,8 @@ Future Vision Transport conçoit des systèmes embarqués de vision par ordinate
 Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 ### 📁 [.github](.github)
-- [main_segmentationFlaskApp.yml](.github/workflows/main_segmentationFlaskApp.yml) : Workflow Github Actions pour l'api.
-- [main_streamlit-segmentationFlaskApp.yml](.github/workflows/main_streamlit-segmentationFlaskApp.yml) : Workflow Github Actions pour l'application streamlit.
+- [main_app-segmentation.yml](.github/workflows/main_app-segmentation.yml) : Workflow Github Actions pour l'api.
+- [main_streamlit-segmentation.yml](.github/workflows/main_streamlit-segmentation.yml) : Workflow Github Actions pour l'application streamlit.
 
 ### 📁 [api](api)
 
@@ -40,9 +40,8 @@ Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 - Répertoire contenant les données nécessaires pour le projet retrouvables sur [Kaggle](https://www.cityscapes-dataset.com/dataset-overview/).
 
-### 📁 [modelisation](modelisation)
-
-- [Segmentation.ipynb](modelisation/Segmentation.ipynb) : Notebook avec les différentes modélisations.
+### 📄 [Segmentation.ipynb](Segmentation.ipynb) 
+- Notebook avec les différentes modélisations.
 
 
 ### 📄 [note_technique.pdf](note_technique.pdf) : 
@@ -53,7 +52,7 @@ Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 - Support de présentation de la démarche méthodologique et des résultats.
 
-### 📄 [load_model.py](api/load_model.py) : 
+### 📄 [load_model.py](load_model.py) : 
 
 - Script pour charger le modèle stocké dans Azure.
 
