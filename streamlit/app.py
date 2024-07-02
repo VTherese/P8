@@ -75,36 +75,11 @@ label_description = {
 
 legend_background_color = (255, 255, 255)
 
-def load_font(font_size):
-    try:
-        return ImageFont.truetype("arial.ttf", font_size)
-    except IOError:
-        try:
-            return ImageFont.truetype("Helvetica.ttf", font_size)
-        except IOError:
-            try:
-                return ImageFont.truetype("Times New Roman.ttf", font_size)
-            except IOError:
-                try:
-                    return ImageFont.truetype("Courier New.ttf", font_size)
-                except IOError:
-                    try:
-                        return ImageFont.truetype("Georgia.ttf", font_size)
-                    except IOError:
-                        try:
-                            return ImageFont.truetype("Verdana.ttf", font_size)
-                        except IOError:
-                            try:
-                                return ImageFont.truetype("Trebuchet MS.ttf", font_size)
-                            except IOError:
-                                return ImageFont.load_default()
-
 def draw_horizontal_legend():
-    rect_size = 10  
-    padding = 7      
+    rect_size = 15  
+    padding = 5      
     text_offset = 120  
-    font_size = 12
-    
+
     num_columns = 4
     num_rows = (len(palette) + num_columns - 1) // num_columns
     
@@ -113,8 +88,11 @@ def draw_horizontal_legend():
     legend = Image.new("RGB", (legend_width, legend_height), legend_background_color)
     draw = ImageDraw.Draw(legend)
     
+    try:
+        font = ImageFont.truetype("arial.ttf", 14)
+    except IOError:
+        font = ImageFont.load_default()
 
-    font = load_font(font_size)
     for i, (label, color) in enumerate(palette.items()):
         row = i // num_columns
         col = i % num_columns
