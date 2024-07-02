@@ -21,8 +21,8 @@ Future Vision Transport conçoit des systèmes embarqués de vision par ordinate
 Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 ### 📁 [.github](.github)
-- [main_app-segmentation.yml](.github/workflows/main_app-segmentation.yml) : Workflow Github Actions pour l'api.
-- [main_streamlit-segmentation.yml](.github/workflows/main_streamlit-segmentation.yml) : Workflow Github Actions pour l'application streamlit.
+- [main_api-segmentation.yml](.github/workflows/main_api-segmentation.yml) : Workflow Github Actions pour l'api.
+- [main_strmlt-segmentation.yml](.github/workflows/main_strmlt-segmentation.yml) : Workflow Github Actions pour l'application streamlit.
 
 ### 📁 [api](api)
 
@@ -33,7 +33,7 @@ Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 ### 📁 [streamlit](streamlit)
 
-- [application.py](streamlit/application.py) : Fichier principal de l'application.
+- [app.py](streamlit/app.py) : Fichier principal de l'application.
 - [requirements.txt](streamlit/requirements.txt) : Dépendances pour Streamlit.
 
 ### 📁 data (Non inclus car fichier trop volumineux)
