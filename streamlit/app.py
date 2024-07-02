@@ -18,9 +18,13 @@ def get_mask(image):
         logging.info("Sending image to segmentation API")
         buffered = BytesIO()
         image.save(buffered, format=image.format)
-        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+        buffered.seek(0)  # Reset buffer position to the beginning
+
+        files = {
+            'file': (buffered, 'image.png')
+        }
         
-        response = requests.post(FLASK_API_URL, json={'image': img_str})
+        response = requests.post(FLASK_API_URL, files=files)
         logging.info(f"API response status code: {response.status_code}")
         
         if response.status_code == 200:

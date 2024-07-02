@@ -10,6 +10,7 @@ from app import app
 # Créer une fixture pour le client de test Flask
 @pytest.fixture
 def client():
+    app.config['TESTING'] = True
     with app.test_client() as client:
         yield client
 
@@ -24,13 +25,14 @@ def test_segment(client):
     image = Image.new('RGB', (256, 256), color='red')
     buffered = BytesIO()
     image.save(buffered, format="JPEG")
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    buffered.seek(0)  # Reset buffer position to the beginning
 
     # Préparer les données pour la requête POST
-    data = json.dumps({"image": img_str})
-    headers = {'Content-Type': 'application/json'}
-
-    rv = client.post('/segment', data=data, headers=headers)
+    data = {
+        'file': (buffered, 'test_image.jpg')
+    }
+    
+    rv = client.post('/segment', content_type='multipart/form-data', data=data)
     json_data = rv.get_json()
     
     assert rv.status_code == 200
@@ -43,4 +45,3 @@ def test_segment(client):
 
     assert mask_image.size == (256, 256)
     assert mask_image.mode == 'RGB'
-
