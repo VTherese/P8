@@ -17,14 +17,14 @@ model = tf.keras.models.load_model('model.keras')
 
 # Palette de couleurs
 palette = {
-    0: [0, 0, 0],         # void - noir
-    1: [128, 64, 128],    # flat - mauve
-    2: [70, 70, 70],      # construction - gris
-    3: [255, 255, 0],     # object - jaune
-    4: [107, 142, 35],    # nature - vert olive
-    5: [70, 130, 180],    # sky - bleu
-    6: [220, 20, 60],     # human - rouge
-    7: [0, 0, 142]        # vehicle - bleu foncé
+    0: [0, 0, 0],         
+    1: [128, 64, 128],    
+    2: [70, 70, 70],      
+    3: [255, 255, 0],    
+    4: [107, 142, 35],    
+    5: [70, 130, 180],    
+    6: [220, 20, 60],     
+    7: [0, 0, 142]        
 }
 
 def colorize_mask(mask):
