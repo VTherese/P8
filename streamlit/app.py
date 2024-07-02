@@ -9,7 +9,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # URL de l'API Flask
-FLASK_API_URL = "http://app-segmentation.azurewebsites.net/segment"
+FLASK_API_URL = "http://api-segmentation.azurewebsites.net/segment"
+# FLASK_API_URL = "http://http://127.0.0.1:8000"
 
 st.set_page_config(page_title="Segmentation d'Images", page_icon="🚗")
 
