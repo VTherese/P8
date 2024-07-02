@@ -9,8 +9,8 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # URL de l'API Flask
-FLASK_API_URL = "http://api-segmentation.azurewebsites.net/segment"
-# FLASK_API_URL = "http://http://127.0.0.1:8000"
+FLASK_API_URL = "https://api-segmentation.azurewebsites.net/segment"
+# FLASK_API_URL = "http://127.0.0.1:8000"
 
 st.set_page_config(page_title="Segmentation d'Images", page_icon="🚗")
 
@@ -22,20 +22,27 @@ def get_mask(image):
         buffered.seek(0)  # Reset buffer position to the beginning
 
         files = {
-            'file': (buffered, 'image.png')
+            'file': ('image.png', buffered, 'image/png')
         }
         
         response = requests.post(FLASK_API_URL, files=files)
         logging.info(f"API response status code: {response.status_code}")
         
         if response.status_code == 200:
-            mask_base64 = response.json()["mask"]
-            mask_data = base64.b64decode(mask_base64)
-            mask_image = Image.open(BytesIO(mask_data))
-            return mask_image
+            response_json = response.json()
+            logging.info(f"API response JSON: {response_json}")
+            mask_base64 = response_json.get("mask", "")
+            if mask_base64:
+                mask_data = base64.b64decode(mask_base64)
+                mask_image = Image.open(BytesIO(mask_data))
+                return mask_image
+            else:
+                st.error("No mask found in API response")
+                logging.error("No mask found in API response")
+                return None
         else:
             st.error("Erreur lors de la requête à l'API Flask")
-            logging.error("Erreur lors de la requête à l'API Flask")
+            logging.error(f"Erreur lors de la requête à l'API Flask: {response.text}")
             return None
     except Exception as e:
         logging.error(f"Error during get_mask: {e}")
@@ -66,7 +73,7 @@ label_description = {
     7: "Vehicle"
 }
 
-legend_background_color = (0, 0, 0) 
+legend_background_color = (215, 222, 234)
 
 def draw_horizontal_legend():
     rect_size = 10  
