@@ -3,6 +3,10 @@ import requests
 import base64
 from PIL import Image, ImageDraw, ImageFont
 from io import BytesIO
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # URL de l'API Flask
 FLASK_API_URL = "http://app-segmentation.azurewebsites.net/segment"
@@ -10,19 +14,26 @@ FLASK_API_URL = "http://app-segmentation.azurewebsites.net/segment"
 st.set_page_config(page_title="Segmentation d'Images", page_icon="🚗")
 
 def get_mask(image):
-    buffered = BytesIO()
-    image.save(buffered, format=image.format)
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    
-    # Correction pour envoyer l'image en base64 via JSON
-    response = requests.post(FLASK_API_URL, json={'image': img_str})
-    
-    if response.status_code == 200:
-        mask_base64 = response.json()["mask"]
-        mask_data = base64.b64decode(mask_base64)
-        mask_image = Image.open(BytesIO(mask_data))
-        return mask_image
-    else:
+    try:
+        logging.info("Sending image to segmentation API")
+        buffered = BytesIO()
+        image.save(buffered, format=image.format)
+        img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+        
+        response = requests.post(FLASK_API_URL, json={'image': img_str})
+        logging.info(f"API response status code: {response.status_code}")
+        
+        if response.status_code == 200:
+            mask_base64 = response.json()["mask"]
+            mask_data = base64.b64decode(mask_base64)
+            mask_image = Image.open(BytesIO(mask_data))
+            return mask_image
+        else:
+            st.error("Erreur lors de la requête à l'API Flask")
+            logging.error("Erreur lors de la requête à l'API Flask")
+            return None
+    except Exception as e:
+        logging.error(f"Error during get_mask: {e}")
         st.error("Erreur lors de la requête à l'API Flask")
         return None
 
@@ -50,26 +61,26 @@ label_description = {
     7: "Vehicle"
 }
 
-legend_background_color = (215, 222, 234) 
+legend_background_color = (0, 0, 0) 
 
 def draw_horizontal_legend():
-    # Taille de chaque élément de légende
     rect_size = 10  
     padding = 7      
     text_offset = 120  
     font_size = 12
     
-    # Déterminer le nombre de lignes et colonnes
     num_columns = 4
     num_rows = (len(palette) + num_columns - 1) // num_columns
     
-    # Calculer la taille de la légende
     legend_width = (rect_size + text_offset + padding) * num_columns
     legend_height = (rect_size + padding) * num_rows + padding
     legend = Image.new("RGB", (legend_width, legend_height), legend_background_color)
     draw = ImageDraw.Draw(legend)
     
-    font = ImageFont.load_default()
+    try:
+        font = ImageFont.truetype("arial.ttf", font_size)
+    except IOError:
+        font = ImageFont.load_default()
 
     for i, (label, color) in enumerate(palette.items()):
         row = i // num_columns
@@ -86,16 +97,16 @@ st.title("Segmentation d'Images pour Voiture Autonome")
 uploaded_file = st.file_uploader("Choisissez une image JPEG ou PNG", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
+    logging.info("Image uploaded")
     image = Image.open(uploaded_file)
     st.image(image, caption='Image téléchargée', use_column_width=True)
     
     if st.button("Segmenter l'image"):
+        logging.info("Segmentation button clicked")
         mask_image = get_mask(image)
         if mask_image:
             legend = draw_horizontal_legend()
-            
-            # Afficher la légende séparément
             st.image(legend, caption='Légende', use_column_width=True)
-            
-            # Afficher le masque de segmentation
             st.image(mask_image, caption='Masque de segmentation', use_column_width=True)
+        else:
+            logging.error("Mask image is None")

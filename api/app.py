@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, request, jsonify
 from PIL import Image
 import numpy as np
@@ -5,12 +6,11 @@ import tensorflow as tf
 from io import BytesIO
 import base64
 import os
-import logging
 
 app = Flask(__name__)
 
 # Configuration du logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 # Charger le modèle pré-entraîné
 model = tf.keras.models.load_model('model.keras')
@@ -54,32 +54,42 @@ def health_check():
 @app.route('/segment', methods=['POST'])
 def segment():
     try:
-        data = request.get_json(force=True)
-        image_data = data['image']
+        logging.info("Segment endpoint hit")
         
-        # Décoder l'image
-        image_bytes = base64.b64decode(image_data)
-        image = Image.open(BytesIO(image_bytes)).convert('RGB')
+        # Check if an image file was uploaded
+        if 'file' not in request.files:
+            logging.error("No file part in the request")
+            return jsonify({"error": "No file part in the request"}), 400
+        
+        file = request.files['file']
+        
+        if file.filename == '':
+            logging.error("No file selected for uploading")
+            return jsonify({"error": "No file selected for uploading"}), 400
+        
+        # Read the image file
+        logging.info("Reading the image file")
+        image = Image.open(file).convert('RGB')
         logging.info("Image received and decoded")
 
-        # Prétraiter l'image et obtenir sa taille originale
+        # Preprocess the image and get its original size
         image_array, original_size = preprocess_image(image, (256, 256))
         logging.info(f"Image preprocessed to size {original_size}")
 
-        # Prédiction du masque
+        # Predict the mask
         pred_mask = model.predict(image_array)
         pred_mask = np.argmax(pred_mask, axis=-1)[0]
         logging.info("Mask prediction completed")
 
-        # Redimensionner le masque à la taille originale
+        # Resize the mask to the original size
         pred_mask_resized = Image.fromarray(pred_mask.astype(np.uint8)).resize(original_size, Image.NEAREST)
         logging.info("Mask resized to original image size")
 
-        # Coloriser le masque
+        # Colorize the mask
         color_mask = colorize_mask(np.array(pred_mask_resized))
         logging.info("Mask colorization completed")
 
-        # Convertir le masque en base64 pour la réponse
+        # Convert the mask to base64 for the response
         color_mask_image = Image.fromarray(color_mask)
         buffered = BytesIO()
         color_mask_image.save(buffered, format="PNG")
