@@ -38,7 +38,7 @@ Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 ### 📁 data (Non inclus car fichier trop volumineux)
 
-- Répertoire contenant les données nécessaires pour le projet retrouvables sur [Kaggle](https://www.cityscapes-dataset.com/dataset-overview/).
+- Répertoire contenant les données nécessaires pour le projet retrouvables sur [Cityscapes](https://www.cityscapes-dataset.com/dataset-overview/).
 
 ### 📄 [Segmentation.ipynb](Segmentation.ipynb) 
 - Notebook avec les différentes modélisations.
@@ -48,9 +48,6 @@ Ce projet contient plusieurs répertoires et fichiers organisés comme suit :
 
 - Note technique présentant les différentes approches et résultats obtenus.
 
-### 📄 [presentation.pdf](presentation.pdf) : 
-
-- Support de présentation de la démarche méthodologique et des résultats.
 
 ### 📄 [load_model.py](load_model.py) : 
 
